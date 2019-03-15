@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Marvel</string>
+    <string name="calc">Calc</string>
+    <string name="outputHint">0</string>
+    <string name="notSpecify">Does not specify</string>
+    <string name="noResultsFound">No results found</string>
+    <string name="viewList">View list</string>
+    <string name="charactersTitle">Characters</string>
+    <string name="comicsTitle">Comics</string>
+    <string name="creatorsTitle">Creators</string>
+    <string name="eventsTitle">Events</string>
+    <string name="seriesTitle">Series</string>
+    <string name="storiesTitle">Stories</string>
+    <string name="invalid">Invalid expression</string>
+    <string name="loadingDashes">---</string>
+    <string name="notFound">Detail not found</string>
+    <string name="searchHint">Search</string>
+</resources>
