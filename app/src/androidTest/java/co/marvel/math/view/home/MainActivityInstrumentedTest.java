@@ -1,39 +1,38 @@
 package co.marvel.math.view.home;
 
-import android.widget.TextView;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import co.marvel.math.R;
-import co.marvel.math.view.home.MainActivity;
+import co.marvel.math.utils.FetchingIdlingResource;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-@RunWith(AndroidJUnit4ClassRunner.class)
+@RunWith(AndroidJUnit4.class)
 @LargeTest
 public class MainActivityInstrumentedTest {
-
     @Rule
     public ActivityScenarioRule<MainActivity> mainView = new ActivityScenarioRule<>(MainActivity.class);
 
+
     @Before
-    public void setup() {}
+    public void setup() {
+        IdlingRegistry.getInstance().register(FetchingIdlingResource.sharedInstance());
+    }
 
     @Test
     public void shouldEvaluateAValidOperation() {
@@ -63,7 +62,7 @@ public class MainActivityInstrumentedTest {
     }
 
     @Test
-    public void shouldEvaluateAValidOperationAndGoToTheStoriesListView() {
+    public void shouldEvaluateAValidOperationAndGoToTheStoriesListView() throws Exception {
         // given
         String valueToEnter = "2 + (-4)";
         String resultExpected = "-2";
@@ -75,12 +74,6 @@ public class MainActivityInstrumentedTest {
         // then
         onView(withId(R.id.output)).check(matches(withText(resultExpected)));
         onView(withId(R.id.viewList)).perform(click());
-        onView(withId(R.id.loading)).check(matches(isDisplayed()));
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         onView(withId(R.id.results)).perform(RecyclerViewActions.actionOnItemAtPosition(2, click()));
     }
 }

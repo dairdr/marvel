@@ -33,6 +33,7 @@ import co.marvel.math.data.source.remote.stories.response.ListStoriesResult;
 import co.marvel.math.data.source.remote.stories.response.Story;
 import co.marvel.math.data.source.remote.stories.response.StorySucceedResult;
 import co.marvel.math.utils.Expression;
+import co.marvel.math.utils.FetchingIdlingResource;
 import co.marvel.math.utils.StringExt;
 import co.marvel.math.view.list.adapter.CharacterOption;
 import co.marvel.math.view.list.adapter.ComicOption;
@@ -44,6 +45,7 @@ import co.marvel.math.view.list.adapter.StoryOption;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -479,6 +481,18 @@ public class MainViewModel extends ViewModel {
         disposableRepository = storiesDataSource.stories(timestamp, BuildConfig.API_KEY, hash, 20)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        FetchingIdlingResource.sharedInstance().beginFetching();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        FetchingIdlingResource.sharedInstance().doneFetching();
+                    }
+                })
                 .subscribe(new Consumer<ListStoriesResult>() {
                     @Override
                     public void accept(ListStoriesResult listStoriesResult) throws Exception {
